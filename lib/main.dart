@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:url_strategy/url_strategy.dart';
 import 'package:weather_app/dio_injector/setup_locator.dart';
-import 'package:jiffy/jiffy.dart';
+// import 'package:jiffy/jiffy.dart';
 import 'package:weather_app/router/route_navigation.dart';
 import 'package:weather_app/screen/home/bloc/weather_bloc.dart';
 
 void main() async {
   setPathUrlStrategy();
   setupLocator();
-  await Jiffy.setLocale('id');
+  // await Jiffy.setLocale('id');
   runApp(const MyApp());
 }
 

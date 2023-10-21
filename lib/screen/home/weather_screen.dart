@@ -4,14 +4,14 @@ import 'package:jiffy/jiffy.dart';
 import 'package:weather_app/models/full_weather.dart';
 import 'package:weather_app/screen/home/bloc/weather_bloc.dart';
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+class WeatherScreen extends StatefulWidget {
+  const WeatherScreen({super.key});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  State<WeatherScreen> createState() => _WeatherScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _WeatherScreenState extends State<WeatherScreen> {
   @override
   void initState() {
     context.read<WeatherBloc>().add(const GetWeather());
@@ -31,18 +31,20 @@ class _HomeScreenState extends State<HomeScreen> {
             itemBuilder: (context, i) {
               FullWeather weather = state.forecast?.list?[i] ?? FullWeather();
               return ListTile(
+                onTap: () {},
                 leading: Image.network(
                     'https://openweathermap.org/img/wn/${weather.weather?[0].icon}.png'),
                 title: Text(
                   Jiffy.parse(weather.dtTxt!)
-                      .format(pattern: "EEEE, dd MMMM yyyy HH:mm:ss"),
+                      .format(pattern: "EEE, dd MMM yyyy HH:mm"),
                   style: const TextStyle(fontWeight: FontWeight.w600),
                 ),
                 subtitle: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(weather.weather?[0].main ?? ""),
-                    Text((weather.main?.temp ?? 0).toString()),
+                    Text(
+                        "Temp : ${(weather.main?.temp ?? 0).toString()}\u2103"),
                   ],
                 ),
               );
