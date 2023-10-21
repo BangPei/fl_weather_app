@@ -31,8 +31,20 @@ class _HomeScreenState extends State<HomeScreen> {
             itemBuilder: (context, i) {
               FullWeather weather = state.forecast?.list?[i] ?? FullWeather();
               return ListTile(
-                title: Text(Jiffy.parse(weather.dtTxt!)
-                    .format(pattern: "EEEE, dd MMMM yyyy HH:mm:ss")),
+                leading: Image.network(
+                    'https://openweathermap.org/img/wn/${weather.weather?[0].icon}.png'),
+                title: Text(
+                  Jiffy.parse(weather.dtTxt!)
+                      .format(pattern: "EEEE, dd MMMM yyyy HH:mm:ss"),
+                  style: const TextStyle(fontWeight: FontWeight.w600),
+                ),
+                subtitle: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(weather.weather?[0].main ?? ""),
+                    Text((weather.main?.temp ?? 0).toString()),
+                  ],
+                ),
               );
             },
             separatorBuilder: (BuildContext context, int index) {

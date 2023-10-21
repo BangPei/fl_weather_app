@@ -28,6 +28,7 @@ class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
           desiredAccuracy: LocationAccuracy.high);
       Api.params['lat'] = position.latitude;
       Api.params['lon'] = position.longitude;
+      Api.params['units'] = "metric"; // get data in Celcius
       Forecast forecast = await WeatherApi.getForecast();
       emit(state.copyWith(isLoading: false, forecast: forecast));
     } catch (e) {
