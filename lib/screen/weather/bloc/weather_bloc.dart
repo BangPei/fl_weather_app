@@ -2,7 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weather_app/models/forecast.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:weather_app/screen/home/weather_api.dart';
+import 'package:weather_app/screen/weather/weather_api.dart';
 import 'package:weather_app/service/api.dart';
 
 part 'weather_event.dart';

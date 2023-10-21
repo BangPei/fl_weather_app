@@ -4,7 +4,7 @@ import 'package:url_strategy/url_strategy.dart';
 import 'package:weather_app/dio_injector/setup_locator.dart';
 // import 'package:jiffy/jiffy.dart';
 import 'package:weather_app/router/route_navigation.dart';
-import 'package:weather_app/screen/home/bloc/weather_bloc.dart';
+import 'package:weather_app/screen/weather/bloc/weather_bloc.dart';
 
 void main() async {
   setPathUrlStrategy();
@@ -23,10 +23,10 @@ class MyApp extends StatelessWidget {
         BlocProvider<WeatherBloc>(create: (__) => WeatherBloc()),
       ],
       child: MaterialApp.router(
-        title: 'Flutter Demo',
+        title: 'Weather App',
         theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-          useMaterial3: true,
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.lightBlue),
+          // useMaterial3: true,
         ),
         debugShowCheckedModeBanner: false,
         routerConfig: RouteNavigation.router,
