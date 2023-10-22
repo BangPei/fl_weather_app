@@ -6,8 +6,9 @@ import 'package:weather_app/dio_injector/setup_locator.dart';
 // import 'package:jiffy/jiffy.dart';
 import 'package:weather_app/router/route_navigation.dart';
 import 'package:weather_app/screen/login/bloc/login_bloc.dart';
+import 'package:weather_app/screen/register/bloc/register_bloc.dart';
 import 'package:weather_app/screen/weather/bloc/weather_bloc.dart';
-import 'firebase_options.dart';
+import 'service/firebase_options.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -27,6 +28,7 @@ class MyApp extends StatelessWidget {
       providers: [
         BlocProvider<WeatherBloc>(create: (__) => WeatherBloc()),
         BlocProvider<LoginBloc>(create: (__) => LoginBloc()),
+        BlocProvider<RegisterBloc>(create: (__) => RegisterBloc()),
       ],
       child: MaterialApp.router(
         title: 'Weather App',

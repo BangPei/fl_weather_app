@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:weather_app/screen/login/auth.dart';
+import 'package:weather_app/service/auth_firebase.dart';
 
 part 'login_event.dart';
 part 'login_state.dart';
@@ -31,11 +31,10 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     String emailOrPassword = state.emailOrPhone ?? "";
     String password = state.password ?? "";
     try {
-      var data = await Auth.signInWithEmailAndPassword(
+      await AuthFirebase.signInWithEmailAndPassword(
         email: emailOrPassword,
         password: password,
       );
-      print(data);
     } on FirebaseAuthException catch (e) {
       print(e);
     }
@@ -45,11 +44,10 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     String emailOrPassword = state.emailOrPhone ?? "";
     String password = state.password ?? "";
     try {
-      var data = await Auth.createUserWithEmailAndPassword(
+      await AuthFirebase.createUserWithEmailAndPassword(
         email: emailOrPassword,
         password: password,
       );
-      print(data);
     } on FirebaseAuthException catch (e) {
       print(e);
     }
