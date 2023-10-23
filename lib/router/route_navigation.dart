@@ -5,13 +5,14 @@ import 'package:go_router/go_router.dart';
 import 'package:weather_app/screen/login/login_screen.dart';
 import 'package:weather_app/screen/register/register_screen.dart';
 import 'package:weather_app/screen/weather/weather_screen.dart';
+import 'package:weather_app/widget/widget_tree.dart';
 
 final NavigationService _nav = locator<NavigationService>();
 
 class RouteNavigation {
   static final GoRouter router = GoRouter(
     navigatorKey: _nav.navKey,
-    initialLocation: '/auth',
+    initialLocation: '/verification',
     redirect: (context, state) async {
       // // String? token = await Session.get("token");
       // if (token == null || token == "") {
@@ -22,6 +23,15 @@ class RouteNavigation {
       return null;
     },
     routes: [
+      GoRoute(
+        parentNavigatorKey: _nav.navKey,
+        path: '/verification',
+        pageBuilder: (context, state) {
+          return const NoTransitionPage(
+            child: WidgetTree(),
+          );
+        },
+      ),
       GoRoute(
         parentNavigatorKey: _nav.navKey,
         path: '/auth',

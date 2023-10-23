@@ -21,9 +21,9 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
   void _onChangedEmailOrPhone(
       OnChangedEmailOrPhone event, Emitter<LoginState> emit) {
-    String emailOrPhone = state.emailOrPhone ?? "";
-    emailOrPhone = event.val;
-    emit(state.copyWith(emailOrPhone: emailOrPhone));
+    String email = state.email ?? "";
+    email = event.val;
+    emit(state.copyWith(email: email));
   }
 
   void _onChangedPassword(OnChangedPassword event, Emitter<LoginState> emit) {
@@ -33,11 +33,11 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   }
 
   void _onLogin(OnLogin event, Emitter<LoginState> emit) async {
-    String emailOrPassword = state.emailOrPhone ?? "";
+    String email = state.email ?? "";
     String password = state.password ?? "";
     try {
       await AuthFirebase.signInWithEmailAndPassword(
-        email: emailOrPassword,
+        email: email,
         password: password,
       );
     } on FirebaseAuthException catch (e) {
@@ -48,10 +48,8 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   void _onLoginPhoneNumber(
       OnLoginPhoneNumber event, Emitter<LoginState> emit) async {
     try {
-      // await AuthFirebase.signInWithPhoneNumber(
-      //     phoneNumber: state.emailOrPhone!);
-      // await AuthFirebase.verifyPhoneNumber(
-      //     _nav.navKey.currentContext!, state.emailOrPhone!);
+      await AuthFirebase.verifyPhoneNumber(
+          _nav.navKey.currentContext!, state.phoneNumber!);
     } on FirebaseAuthException catch (e) {
       print(e);
     }

@@ -13,7 +13,7 @@ class AuthFirebase {
   static CollectionReference users =
       FirebaseFirestore.instance.collection('user');
 
-  Stream<User?> get authState => firebaseAuth.authStateChanges();
+  static Stream<User?> get authState => firebaseAuth.authStateChanges();
 
   static Future signInWithGoogle(BuildContext context) async {
     try {
