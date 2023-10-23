@@ -2,41 +2,42 @@ import 'package:weather_app/common/session_manager.dart';
 import 'package:weather_app/dio_injector/navigation_service.dart';
 import 'package:weather_app/dio_injector/setup_locator.dart';
 import 'package:go_router/go_router.dart';
+import 'package:weather_app/screen/login/login_phone_screen.dart';
 import 'package:weather_app/screen/login/login_screen.dart';
 import 'package:weather_app/screen/register/register_screen.dart';
 import 'package:weather_app/screen/weather/weather_screen.dart';
-import 'package:weather_app/widget/widget_tree.dart';
 
 final NavigationService _nav = locator<NavigationService>();
 
 class RouteNavigation {
   static final GoRouter router = GoRouter(
     navigatorKey: _nav.navKey,
-    initialLocation: '/splash',
+    initialLocation: '/',
     redirect: (context, state) async {
-      bool? val = await Session.checkValue("user");
-      if (!val) {
+      bool isUser = await Session.checkValue("user");
+      if (!isUser) {
         return '/auth';
       } else {
-        return '/';
+        return null;
       }
     },
     routes: [
-      GoRoute(
-        parentNavigatorKey: _nav.navKey,
-        path: '/splash',
-        pageBuilder: (context, state) {
-          return const NoTransitionPage(
-            child: WidgetTree(),
-          );
-        },
-      ),
       GoRoute(
         parentNavigatorKey: _nav.navKey,
         path: '/auth',
         pageBuilder: (context, state) {
           return const NoTransitionPage(
             child: LoginScreen(),
+          );
+        },
+      ),
+      GoRoute(
+        parentNavigatorKey: _nav.navKey,
+        path: '/auth-phone',
+        name: 'auth-phone',
+        pageBuilder: (context, state) {
+          return const NoTransitionPage(
+            child: LoginPhoneScreen(),
           );
         },
       ),

@@ -9,3 +9,7 @@ abstract class WeatherEvent extends Equatable {
 class GetWeather extends WeatherEvent {
   const GetWeather();
 }
+
+class OnSignOut extends WeatherEvent {
+  const OnSignOut();
+}

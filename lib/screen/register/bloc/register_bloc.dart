@@ -2,8 +2,10 @@
 
 import 'dart:convert';
 import 'package:equatable/equatable.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:weather_app/common/common.dart';
 import 'package:weather_app/common/session_manager.dart';
 import 'package:weather_app/dio_injector/navigation_service.dart';
 import 'package:weather_app/dio_injector/setup_locator.dart';
@@ -21,8 +23,8 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
     on<OnChangedPhone>(_onChangedPhone);
     on<OnChangedFullName>(_onChangedFullName);
     on<OnChangedPassword>(_onChangedPassword);
-    on<OnRegisterWithEmail>(_onRegisterWithEmail);
-    on<OnRegisterWithPhone>(_onRegisterWithPhone);
+    // on<OnRegisterWithEmail>(_onRegisterWithEmail);
+    // on<OnRegisterWithPhone>(_onRegisterWithPhone);
     on<OnRegisterFireStore>(_onRegisterFireStore);
   }
 
@@ -52,39 +54,48 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
     emit(state.copyWith(user: user));
   }
 
-  void _onRegisterWithEmail(
-      OnRegisterWithEmail event, Emitter<RegisterState> emit) async {
-    // String email = state.email ?? "";
-    // String password = state.password ?? "";
-    // try {
-    //   await AuthFirebase.createUserWithEmailAndPassword(
-    //     email: email,
-    //     password: password,
-    //   );
-    //   await AuthFirebase.currUser?.updateDisplayName(state.fullName);
-    // } on FirebaseAuthException catch (e) {
-    //   print(e);
-    // }
-  }
+  // void _onRegisterWithEmail(
+  //     OnRegisterWithEmail event, Emitter<RegisterState> emit) async {
+  //   // String email = state.email ?? "";
+  //   // String password = state.password ?? "";
+  //   // try {
+  //   //   await AuthFirebase.createUserWithEmailAndPassword(
+  //   //     email: email,
+  //   //     password: password,
+  //   //   );
+  //   //   await AuthFirebase.currUser?.updateDisplayName(state.fullName);
+  //   // } on FirebaseAuthException catch (e) {
+  //   //   print(e);
+  //   // }
+  // }
 
-  void _onRegisterWithPhone(
-      OnRegisterWithPhone event, Emitter<RegisterState> emit) async {
-    // String phone = state.phoneNumber ?? "";
-    // try {
-    //   await AuthFirebase.verifyPhoneNumber(_nav.navKey.currentContext!, phone);
-    //   await AuthFirebase.currUser?.updateDisplayName(state.fullName);
-    // } on FirebaseAuthException catch (e) {
-    //   print(e);
-    // }
-  }
+  // void _onRegisterWithPhone(
+  //     OnRegisterWithPhone event, Emitter<RegisterState> emit) async {
+  //   // String phone = state.phoneNumber ?? "";
+  //   // try {
+  //   //   await AuthFirebase.verifyPhoneNumber(_nav.navKey.currentContext!, phone);
+  //   //   await AuthFirebase.currUser?.updateDisplayName(state.fullName);
+  //   // } on FirebaseAuthException catch (e) {
+  //   //   print(e);
+  //   // }
+  // }
 
   void _onRegisterFireStore(
       OnRegisterFireStore event, Emitter<RegisterState> emit) async {
     UserModel user = state.user ?? UserModel();
-    UserModel newUser = await AuthFirebase.registerUserFirestore(
-        _nav.navKey.currentContext!, user);
-    Session.set("user", jsonEncode(newUser.toJson()));
-    _nav.navKey.currentContext!.go("/");
-    emit(state.copyWith(user: newUser));
+
+    try {
+      UserModel newUser = await AuthFirebase.registerUserFirestore(
+          _nav.navKey.currentContext!, user);
+      Session.set("user", jsonEncode(newUser.toJson()));
+      _nav.navKey.currentContext!.go("/");
+      emit(state.copyWith(user: newUser));
+    } on FirebaseAuthException catch (e) {
+      Common.modalInfo(
+        _nav.navKey.currentContext!,
+        title: e.message ?? "Something went wrong !",
+        message: "Error",
+      );
+    }
   }
 }

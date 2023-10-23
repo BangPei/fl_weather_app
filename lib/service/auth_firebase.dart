@@ -1,10 +1,10 @@
-// ignore_for_file: avoid_print
+// ignore_for_file: avoid_print, use_build_context_synchronously
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:weather_app/common/common.dart';
 import 'package:weather_app/models/user_model.dart';
 
 class AuthFirebase {
@@ -17,20 +17,20 @@ class AuthFirebase {
 
   static Stream<User?> get authState => firebaseAuth.authStateChanges();
 
-  static Future signInWithGoogle(BuildContext context) async {
-    try {
-      final GoogleSignInAccount? gUser = await GoogleSignIn().signIn();
-      final GoogleSignInAuthentication gAuth = await gUser!.authentication;
-      final credential = GoogleAuthProvider.credential(
-        accessToken: gAuth.accessToken,
-        idToken: gAuth.idToken,
-      );
-      firebaseAuth.signInWithCredential(credential).then((value) {
-        context.go("/");
-      });
-    } on FirebaseAuthException catch (e) {
-      print(e);
-    }
+  static Future<UserModel> signInWithGoogle(BuildContext context) async {
+    final GoogleSignInAccount? gUser = await GoogleSignIn().signIn();
+    final GoogleSignInAuthentication gAuth = await gUser!.authentication;
+    final credential = GoogleAuthProvider.credential(
+      accessToken: gAuth.accessToken,
+      idToken: gAuth.idToken,
+    );
+    firebaseAuth.signInWithCredential(credential);
+    UserModel user = UserModel(
+      email: gUser.email,
+      fullname: gUser.displayName,
+      phoneNumber: "",
+    );
+    return user;
   }
 
   static Future signInWithEmailAndPassword({
@@ -41,20 +41,24 @@ class AuthFirebase {
       email: email,
       password: password,
     );
+    final QuerySnapshot emailResult =
+        await users.where("email", isEqualTo: email).get();
+    if (emailResult.docs.isEmpty) {
+      return null;
+    }
+    var data = emailResult.docs[0].data() as Map<String, dynamic>;
+    UserModel user = UserModel.fromJson(data);
+    return user;
   }
 
   static Future createUserWithEmailAndPassword({
     required String email,
     required String password,
   }) async {
-    try {
-      await firebaseAuth.createUserWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
-    } on FirebaseAuthException catch (e) {
-      print(e);
-    }
+    await firebaseAuth.createUserWithEmailAndPassword(
+      email: email,
+      password: password,
+    );
   }
 
   static Future verifyPhoneNumber(BuildContext context, String phone) async {
@@ -75,20 +79,26 @@ class AuthFirebase {
             smsCode: smsCode,
           );
 
-          try {
-            await firebaseAuth.signInWithCredential(credential);
-          } on FirebaseAuthException catch (e) {
-            print(e);
-          }
+          await firebaseAuth.signInWithCredential(credential);
         }
       },
       codeAutoRetrievalTimeout: (verificationId) {
         print(verificationId);
       },
     );
+
+    final QuerySnapshot phoneResult =
+        await users.where("phoneNumber", isEqualTo: phone).get();
+    if (phoneResult.docs.isEmpty) {
+      return null;
+    }
+    var data = phoneResult.docs[0].data() as Map<String, dynamic>;
+    UserModel user = UserModel.fromJson(data);
+    return user;
   }
 
   static Future signOut() async {
+    await GoogleSignIn().signOut();
     await firebaseAuth.signOut();
   }
 
@@ -105,16 +115,16 @@ class AuthFirebase {
         email: user.email!,
         password: user.password!,
       );
-      // ignore: use_build_context_synchronously
       await verifyPhoneNumber(context, user.phoneNumber!);
       await users.add(user.toJson()).whenComplete(() {
         print("ok");
-        // ignore: body_might_complete_normally_catch_error
-      }).catchError((error, stactTrace) {
-        print(error);
       });
     } else {
-      print("email or phone number already registered");
+      Common.modalInfo(
+        context,
+        title: "Email or Phone number already registered",
+        message: "Error",
+      );
     }
     return user;
   }

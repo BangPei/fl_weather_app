@@ -1,10 +1,17 @@
-// ignore_for_file: avoid_print
+// ignore_for_file: avoid_print, use_build_context_synchronously
+
+import 'dart:convert';
 
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+import 'package:weather_app/common/common.dart';
+import 'package:weather_app/common/session_manager.dart';
 import 'package:weather_app/dio_injector/navigation_service.dart';
 import 'package:weather_app/dio_injector/setup_locator.dart';
+import 'package:weather_app/models/user_model.dart';
 import 'package:weather_app/service/auth_firebase.dart';
 
 part 'login_event.dart';
@@ -19,7 +26,10 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     on<OnLogin>(_onLogin);
     on<OnLoginPhoneNumber>(_onLoginPhoneNumber);
     on<OnLoginGoogle>(_onLoginGoogle);
+    on<OnForgotPassword>(_onForgotPassword);
   }
+
+  BuildContext context = _nav.navKey.currentContext!;
 
   void _onChangedEmailOrPhone(
       OnChangedEmailOrPhone event, Emitter<LoginState> emit) {
@@ -38,30 +48,58 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     String email = state.email ?? "";
     String password = state.password ?? "";
     try {
-      await AuthFirebase.signInWithEmailAndPassword(
+      UserModel user = await AuthFirebase.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
+      Session.set("user", jsonEncode(user.toJson()));
+      context.go("/");
     } on FirebaseAuthException catch (e) {
-      print(e);
+      Common.modalInfo(
+        context,
+        title: e.message ?? "Something went wrong !",
+        message: "Error",
+      );
     }
   }
 
   void _onLoginPhoneNumber(
       OnLoginPhoneNumber event, Emitter<LoginState> emit) async {
     try {
-      await AuthFirebase.verifyPhoneNumber(
-          _nav.navKey.currentContext!, state.phoneNumber!);
+      await AuthFirebase.verifyPhoneNumber(context, event.val);
     } on FirebaseAuthException catch (e) {
-      print(e);
+      Common.modalInfo(
+        context,
+        title: e.message ?? "Something went wrong !",
+        message: "Error",
+      );
     }
   }
 
   void _onLoginGoogle(OnLoginGoogle event, Emitter<LoginState> emit) async {
     try {
-      AuthFirebase.signInWithGoogle(_nav.navKey.currentContext!);
+      UserModel user = await AuthFirebase.signInWithGoogle(context);
+      Session.set("user", jsonEncode(user.toJson()));
+      context.go("/");
     } on FirebaseAuthException catch (e) {
-      print(e);
+      Common.modalInfo(
+        context,
+        title: e.message ?? "Something went wrong !",
+        message: "Error",
+      );
+    }
+  }
+
+  void _onForgotPassword(
+      OnForgotPassword event, Emitter<LoginState> emit) async {
+    try {
+      await AuthFirebase.sendPasswordResetEmail(event.val);
+    } on FirebaseAuthException catch (e) {
+      Common.modalInfo(
+        context,
+        title: e.message ?? "Something went wrong !",
+        message: "Error",
+      );
     }
   }
 }

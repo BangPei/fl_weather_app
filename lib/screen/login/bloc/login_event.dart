@@ -17,14 +17,25 @@ class OnChangedEmailOrPhone extends LoginEvent {
   const OnChangedEmailOrPhone(this.val);
 }
 
+class OnChangedLoginPhone extends LoginEvent {
+  final String val;
+  const OnChangedLoginPhone(this.val);
+}
+
 class OnLogin extends LoginEvent {
   const OnLogin();
 }
 
 class OnLoginPhoneNumber extends LoginEvent {
-  const OnLoginPhoneNumber();
+  final String val;
+  const OnLoginPhoneNumber(this.val);
 }
 
 class OnLoginGoogle extends LoginEvent {
   const OnLoginGoogle();
+}
+
+class OnForgotPassword extends LoginEvent {
+  final String val;
+  const OnForgotPassword(this.val);
 }

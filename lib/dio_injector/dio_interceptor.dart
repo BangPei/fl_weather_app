@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:go_router/go_router.dart';
+import 'package:weather_app/common/common.dart';
 import 'package:weather_app/dio_injector/navigation_service.dart';
 import 'package:weather_app/dio_injector/setup_locator.dart';
 
@@ -18,10 +18,18 @@ class DioInterceptors extends InterceptorsWrapper {
       if (responseCode == 403) {
         //
       } else {
-        //
+        Common.modalInfo(
+          _nav.navKey.currentContext!,
+          title: data.message ?? "Something went wrong !",
+          message: "Error",
+        );
       }
     } else {
-      //
+      Common.modalInfo(
+        _nav.navKey.currentContext!,
+        title: data.message ?? "Something went wrong !",
+        message: "Error",
+      );
     }
     super.onError(err, handler);
   }
