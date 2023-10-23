@@ -146,12 +146,20 @@ class _LoginScreenState extends State<LoginScreen> {
               ],
             ),
             const SizedBox(height: 50),
-            const Row(
+            Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                ButtonLogo(imagePath: 'lib/images/google.png'),
-                SizedBox(width: 25),
-                ButtonLogo(imagePath: 'lib/images/phone.png')
+                ButtonLogo(
+                  imagePath: 'lib/images/google.png',
+                  onTap: () {
+                    context.read<LoginBloc>().add(const OnLoginGoogle());
+                  },
+                ),
+                const SizedBox(width: 25),
+                ButtonLogo(
+                  imagePath: 'lib/images/phone.png',
+                  onTap: () {},
+                )
               ],
             ),
             const SizedBox(height: 50),

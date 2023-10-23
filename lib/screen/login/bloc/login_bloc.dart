@@ -16,6 +16,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     on<OnChangedPassword>(_onChangedPassword);
     on<OnLogin>(_onLogin);
     on<OnLoginPhoneNumber>(_onLoginPhoneNumber);
+    on<OnLoginGoogle>(_onLoginGoogle);
   }
 
   void _onChangedEmailOrPhone(
@@ -49,8 +50,16 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     try {
       // await AuthFirebase.signInWithPhoneNumber(
       //     phoneNumber: state.emailOrPhone!);
-      await AuthFirebase.verifyPhoneNumber(
-          _nav.navKey.currentContext!, state.emailOrPhone!);
+      // await AuthFirebase.verifyPhoneNumber(
+      //     _nav.navKey.currentContext!, state.emailOrPhone!);
+    } on FirebaseAuthException catch (e) {
+      print(e);
+    }
+  }
+
+  void _onLoginGoogle(OnLoginGoogle event, Emitter<LoginState> emit) async {
+    try {
+      AuthFirebase.signInWithGoogle(_nav.navKey.currentContext!);
     } on FirebaseAuthException catch (e) {
       print(e);
     }

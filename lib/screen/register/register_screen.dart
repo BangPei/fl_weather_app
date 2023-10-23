@@ -13,7 +13,7 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
-  final List<bool> _selected = <bool>[true, false];
+  TextEditingController passCont = TextEditingController();
   final formKey = GlobalKey<FormState>();
   int index = 0;
   @override
@@ -36,38 +36,24 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 ),
               ),
               const SizedBox(height: 25),
-              ToggleButtons(
-                constraints: const BoxConstraints(
-                  minHeight: 40.0,
-                  minWidth: 80.0,
-                ),
-                borderRadius: const BorderRadius.all(Radius.circular(8)),
-                selectedBorderColor: Colors.blue[700],
-                selectedColor: Colors.white,
-                fillColor: Colors.blue[200],
-                color: Colors.blue[400],
-                onPressed: (idx) {
-                  for (int i = 0; i < _selected.length; i++) {
-                    _selected[i] = i == idx;
-                    index = idx;
-                  }
-                  setState(() {});
-                },
-                isSelected: _selected,
-                children: const [
-                  Text('Email'),
-                  Text('Phone'),
-                ],
-              ),
               TextFormField(
                 validator: ValidForm.emptyValue,
-                keyboardType: index == 0 ? null : TextInputType.phone,
                 decoration: DecorationText.box(
-                  hintText: index == 0 ? "Email" : "Phone",
+                  hintText: "Email",
                 ),
                 onChanged: (val) {
-                  context.read<RegisterBloc>().add(
-                      index == 0 ? OnChangedEmail(val) : OnChangedPhone(val));
+                  context.read<RegisterBloc>().add(OnChangedEmail(val));
+                },
+              ),
+              const SizedBox(height: 10),
+              TextFormField(
+                validator: ValidForm.emptyValue,
+                keyboardType: TextInputType.phone,
+                decoration: DecorationText.box(
+                  hintText: "Phone",
+                ),
+                onChanged: (val) {
+                  context.read<RegisterBloc>().add(OnChangedPhone(val));
                 },
               ),
               const SizedBox(height: 10),
@@ -80,6 +66,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               ),
               const SizedBox(height: 10),
               TextFormField(
+                controller: passCont,
                 obscureText: true,
                 validator: ValidForm.emptyValue,
                 decoration: DecorationText.box(hintText: "Password"),
@@ -87,14 +74,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   context.read<RegisterBloc>().add(OnChangedPassword(val));
                 },
               ),
+              const SizedBox(height: 10),
               BlocBuilder<RegisterBloc, RegisterState>(
                 builder: (context, state) {
                   return TextFormField(
                     obscureText: true,
-                    // validator: (value) {
-                    //   return ValidForm.matchValue(
-                    //       value, state.password, "Password");
-                    // },
+                    validator: (value) {
+                      return ValidForm.matchValue(
+                          value, passCont.text, "Password");
+                    },
                     decoration:
                         DecorationText.box(hintText: "Confirm Password"),
                     onChanged: (val) {},
@@ -105,15 +93,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
               MyButton(
                 onTap: () {
                   if (formKey.currentState!.validate()) {
-                    if (index == 0) {
-                      context
-                          .read<RegisterBloc>()
-                          .add(const OnRegisterWithEmail());
-                    } else {
-                      context
-                          .read<RegisterBloc>()
-                          .add(const OnRegisterWithPhone());
-                    }
+                    context
+                        .read<RegisterBloc>()
+                        .add(const OnRegisterFireStore());
                   }
                 },
                 title: 'Sign Up',

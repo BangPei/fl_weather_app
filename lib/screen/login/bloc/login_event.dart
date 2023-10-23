@@ -24,3 +24,7 @@ class OnLogin extends LoginEvent {
 class OnLoginPhoneNumber extends LoginEvent {
   const OnLoginPhoneNumber();
 }
+
+class OnLoginGoogle extends LoginEvent {
+  const OnLoginGoogle();
+}

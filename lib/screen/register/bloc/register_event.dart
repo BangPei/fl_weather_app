@@ -34,3 +34,7 @@ class OnRegisterWithEmail extends RegisterEvent {
 class OnRegisterWithPhone extends RegisterEvent {
   const OnRegisterWithPhone();
 }
+
+class OnRegisterFireStore extends RegisterEvent {
+  const OnRegisterFireStore();
+}

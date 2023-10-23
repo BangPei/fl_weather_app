@@ -1,27 +1,20 @@
 part of 'register_bloc.dart';
 
 class RegisterState extends Equatable {
-  final String? fullName;
-  final String? phoneNumber;
-  final String? email;
-  final String? password;
-  const RegisterState(
-      {this.fullName, this.password, this.phoneNumber, this.email});
+  final UserModel? user;
+  final bool? isLoading;
+  const RegisterState({this.user, this.isLoading});
 
   RegisterState copyWith({
-    String? email,
-    String? password,
-    String? fullName,
-    String? phoneNumber,
+    UserModel? user,
+    bool? isloading,
   }) {
     return RegisterState(
-      email: email ?? this.email,
-      fullName: fullName ?? this.fullName,
-      phoneNumber: phoneNumber ?? this.phoneNumber,
-      password: password ?? this.password,
+      user: user ?? this.user,
+      isLoading: isloading ?? this.isLoading,
     );
   }
 
   @override
-  List<Object?> get props => [email, password, phoneNumber, fullName];
+  List<Object?> get props => [user, isLoading];
 }
