@@ -6,6 +6,11 @@ A new Flutter project.
 
 This project is a starting point for a Flutter application.
 
+Before run this project on your local computer please run
+
+- "flutter pub get" on your terminal to get all dependencies.
+- "flutter run" to run this project on your device.
+
 A few resources to get you started if this is your first Flutter project:
 
 - [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
