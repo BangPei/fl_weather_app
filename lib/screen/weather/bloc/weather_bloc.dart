@@ -1,7 +1,13 @@
+// ignore_for_file: avoid_print
+
+import 'dart:convert';
+
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:weather_app/common/session_manager.dart';
 import 'package:weather_app/models/forecast.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:weather_app/models/user_model.dart';
 import 'package:weather_app/screen/weather/weather_api.dart';
 import 'package:weather_app/service/api.dart';
 
@@ -30,7 +36,9 @@ class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
       Api.params['lon'] = position.longitude;
       Api.params['units'] = "metric"; // get data in Celcius
       Forecast forecast = await WeatherApi.getForecast();
-      emit(state.copyWith(isLoading: false, forecast: forecast));
+      var json = await Session.get("user");
+      UserModel user = UserModel.fromJson(jsonDecode(json ?? ""));
+      emit(state.copyWith(isLoading: false, forecast: forecast, user: user));
     } catch (e) {
       print(e);
     }

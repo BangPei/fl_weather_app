@@ -1,6 +1,10 @@
+// ignore_for_file: use_build_context_synchronously
+
+import 'dart:convert';
 import 'package:equatable/equatable.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+import 'package:weather_app/common/session_manager.dart';
 import 'package:weather_app/dio_injector/navigation_service.dart';
 import 'package:weather_app/dio_injector/setup_locator.dart';
 import 'package:weather_app/models/user_model.dart';
@@ -77,6 +81,10 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
   void _onRegisterFireStore(
       OnRegisterFireStore event, Emitter<RegisterState> emit) async {
     UserModel user = state.user ?? UserModel();
-    await AuthFirebase.registerUserFirestore(_nav.navKey.currentContext!, user);
+    UserModel newUser = await AuthFirebase.registerUserFirestore(
+        _nav.navKey.currentContext!, user);
+    Session.set("user", jsonEncode(newUser.toJson()));
+    _nav.navKey.currentContext!.go("/");
+    emit(state.copyWith(user: newUser));
   }
 }

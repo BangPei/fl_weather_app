@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -90,7 +92,7 @@ class AuthFirebase {
     await firebaseAuth.signOut();
   }
 
-  static Future registerUserFirestore(
+  static Future<UserModel> registerUserFirestore(
       BuildContext context, UserModel user) async {
     final QuerySnapshot emailResult = await Future.value(
         users.where("email", isEqualTo: user.email).limit(1).get());
@@ -107,12 +109,14 @@ class AuthFirebase {
       await verifyPhoneNumber(context, user.phoneNumber!);
       await users.add(user.toJson()).whenComplete(() {
         print("ok");
+        // ignore: body_might_complete_normally_catch_error
       }).catchError((error, stactTrace) {
         print(error);
       });
     } else {
       print("email or phone number already registered");
     }
+    return user;
   }
 
   static Future sendPasswordResetEmail(String email) async {

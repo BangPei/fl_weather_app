@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:weather_app/common/session_manager.dart';
 import 'package:weather_app/dio_injector/navigation_service.dart';
 import 'package:weather_app/dio_injector/setup_locator.dart';
 import 'package:go_router/go_router.dart';
@@ -12,20 +12,19 @@ final NavigationService _nav = locator<NavigationService>();
 class RouteNavigation {
   static final GoRouter router = GoRouter(
     navigatorKey: _nav.navKey,
-    initialLocation: '/verification',
+    initialLocation: '/splash',
     redirect: (context, state) async {
-      // // String? token = await Session.get("token");
-      // if (token == null || token == "") {
-      //   return '/auth';
-      // } else {
-      //   return null;
-      // }
-      return null;
+      bool? val = await Session.checkValue("user");
+      if (!val) {
+        return '/auth';
+      } else {
+        return '/';
+      }
     },
     routes: [
       GoRoute(
         parentNavigatorKey: _nav.navKey,
-        path: '/verification',
+        path: '/splash',
         pageBuilder: (context, state) {
           return const NoTransitionPage(
             child: WidgetTree(),
