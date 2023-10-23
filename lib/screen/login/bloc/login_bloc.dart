@@ -1,17 +1,21 @@
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:weather_app/dio_injector/navigation_service.dart';
+import 'package:weather_app/dio_injector/setup_locator.dart';
 import 'package:weather_app/service/auth_firebase.dart';
 
 part 'login_event.dart';
 part 'login_state.dart';
+
+final NavigationService _nav = locator<NavigationService>();
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
   LoginBloc() : super(const LoginState()) {
     on<OnChangedEmailOrPhone>(_onChangedEmailOrPhone);
     on<OnChangedPassword>(_onChangedPassword);
     on<OnLogin>(_onLogin);
-    on<OnRegister>(_onRegister);
+    on<OnLoginPhoneNumber>(_onLoginPhoneNumber);
   }
 
   void _onChangedEmailOrPhone(
@@ -40,14 +44,13 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     }
   }
 
-  void _onRegister(OnRegister event, Emitter<LoginState> emit) async {
-    String emailOrPassword = state.emailOrPhone ?? "";
-    String password = state.password ?? "";
+  void _onLoginPhoneNumber(
+      OnLoginPhoneNumber event, Emitter<LoginState> emit) async {
     try {
-      await AuthFirebase.createUserWithEmailAndPassword(
-        email: emailOrPassword,
-        password: password,
-      );
+      // await AuthFirebase.signInWithPhoneNumber(
+      //     phoneNumber: state.emailOrPhone!);
+      await AuthFirebase.verifyPhoneNumber(
+          _nav.navKey.currentContext!, state.emailOrPhone!);
     } on FirebaseAuthException catch (e) {
       print(e);
     }

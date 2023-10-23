@@ -18,48 +18,45 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[300],
-      body: ListView(
-        children: [
-          const SizedBox(height: 50),
-          const Icon(
-            Icons.lock,
-            size: 100,
-            color: Color.fromARGB(255, 52, 5, 223),
-          ),
-          const Center(
-            child: Text(
-              'Weather App',
-              style: TextStyle(
-                color: Color.fromARGB(255, 52, 5, 223),
-                fontSize: 35,
-                fontWeight: FontWeight.w700,
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 25.0),
+        child: ListView(
+          children: [
+            const SizedBox(height: 50),
+            const Icon(
+              Icons.lock,
+              size: 100,
+              color: Color.fromARGB(255, 52, 5, 223),
+            ),
+            const Center(
+              child: Text(
+                'Weather App',
+                style: TextStyle(
+                  color: Color.fromARGB(255, 52, 5, 223),
+                  fontSize: 35,
+                  fontWeight: FontWeight.w700,
+                ),
               ),
             ),
-          ),
-          const SizedBox(height: 25),
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 25.0, vertical: 5),
-            child: Text(
-              "Enter Your Email to Sign In",
-              style: TextStyle(
-                fontWeight: FontWeight.w700,
+            const SizedBox(height: 25),
+            const Padding(
+              padding: EdgeInsets.symmetric(vertical: 5),
+              child: Text(
+                "Enter Your Email to Sign In",
+                style: TextStyle(
+                  fontWeight: FontWeight.w700,
+                ),
               ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 25.0),
-            child: TextFormField(
+            TextFormField(
               validator: ValidForm.emptyValue,
               decoration: DecorationText.box(hintText: "Email"),
               onChanged: (val) {
                 context.read<LoginBloc>().add(OnChangedEmailOrPhone(val));
               },
             ),
-          ),
-          const SizedBox(height: 10),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 25.0),
-            child: TextFormField(
+            const SizedBox(height: 10),
+            TextFormField(
               obscureText: true,
               validator: ValidForm.emptyValue,
               decoration: DecorationText.box(hintText: "Password"),
@@ -67,11 +64,8 @@ class _LoginScreenState extends State<LoginScreen> {
                 context.read<LoginBloc>().add(OnChangedPassword(val));
               },
             ),
-          ),
-          const SizedBox(height: 10),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 25.0),
-            child: Row(
+            const SizedBox(height: 10),
+            Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 InkWell(
@@ -120,18 +114,15 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ],
             ),
-          ),
-          const SizedBox(height: 25),
-          MyButton(
-            onTap: () {
-              context.read<LoginBloc>().add(const OnLogin());
-            },
-            title: 'Sign In',
-          ),
-          const SizedBox(height: 50),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 25.0),
-            child: Row(
+            const SizedBox(height: 25),
+            MyButton(
+              onTap: () {
+                context.read<LoginBloc>().add(const OnLoginPhoneNumber());
+              },
+              title: 'Sign In',
+            ),
+            const SizedBox(height: 50),
+            Row(
               children: [
                 Expanded(
                   child: Divider(
@@ -154,40 +145,40 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ],
             ),
-          ),
-          const SizedBox(height: 50),
-          const Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              ButtonLogo(imagePath: 'lib/images/google.png'),
-              SizedBox(width: 25),
-              ButtonLogo(imagePath: 'lib/images/phone.png')
-            ],
-          ),
-          const SizedBox(height: 50),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                'Not a member?',
-                style: TextStyle(color: Colors.grey[700]),
-              ),
-              const SizedBox(width: 4),
-              InkWell(
-                onTap: () {
-                  context.pushNamed("register");
-                },
-                child: const Text(
-                  'Register now',
-                  style: TextStyle(
-                    color: Colors.blue,
-                    fontWeight: FontWeight.bold,
+            const SizedBox(height: 50),
+            const Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ButtonLogo(imagePath: 'lib/images/google.png'),
+                SizedBox(width: 25),
+                ButtonLogo(imagePath: 'lib/images/phone.png')
+              ],
+            ),
+            const SizedBox(height: 50),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  'Not a member?',
+                  style: TextStyle(color: Colors.grey[700]),
+                ),
+                const SizedBox(width: 4),
+                InkWell(
+                  onTap: () {
+                    context.pushNamed("register");
+                  },
+                  child: const Text(
+                    'Register now',
+                    style: TextStyle(
+                      color: Colors.blue,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
-              ),
-            ],
-          )
-        ],
+              ],
+            )
+          ],
+        ),
       ),
     );
   }

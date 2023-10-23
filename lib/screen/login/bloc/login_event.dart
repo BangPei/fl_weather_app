@@ -21,6 +21,6 @@ class OnLogin extends LoginEvent {
   const OnLogin();
 }
 
-class OnRegister extends LoginEvent {
-  const OnRegister();
+class OnLoginPhoneNumber extends LoginEvent {
+  const OnLoginPhoneNumber();
 }

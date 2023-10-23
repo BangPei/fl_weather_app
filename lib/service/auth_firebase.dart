@@ -21,7 +21,13 @@ class AuthFirebase {
   static Future signInWithPhoneNumber({
     required String phoneNumber,
   }) async {
-    await firebaseAuth.signInWithPhoneNumber(phoneNumber);
+    try {
+      var data = await firebaseAuth.signInWithPhoneNumber(phoneNumber);
+      // await data.confirm();
+      print(data);
+    } on FirebaseAuthException catch (e) {
+      print(e);
+    }
   }
 
   static Future createUserWithEmailAndPassword({
@@ -47,14 +53,12 @@ class AuthFirebase {
         final smsCode = await getSmsCodeFromUser(context);
 
         if (smsCode != null) {
-          // Create a PhoneAuthCredential with the code
           final credential = PhoneAuthProvider.credential(
             verificationId: verificationId,
             smsCode: smsCode,
           );
 
           try {
-            // Sign the user in (or link) with the credential
             await firebaseAuth.signInWithCredential(credential);
           } on FirebaseAuthException catch (e) {
             print(e);
