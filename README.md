@@ -10,6 +10,9 @@ Before run this project on your local computer please run
 
 - "flutter pub get" on your terminal to get all dependencies.
 - "flutter run" to run this project on your device.
+- if you get an error about firebase, make sure you run on JAVA / Jdk 11 on your computer.
+- changing the JAVA_HOME value in Environtment Variabe to your java/jdk 11 path
+  ![Alt text](image.png)
 
 A few resources to get you started if this is your first Flutter project:
 
